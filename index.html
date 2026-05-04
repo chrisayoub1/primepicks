@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>prime-picks.co — Designer Clothing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: '#F5F0EB',
+                        ivory: '#FAF8F5',
+                        sand: '#E8DDD3',
+                        charcoal: '#1A1A1A',
+                        graphite: '#2D2D2D',
+                        warmgray: '#8A8279',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    letterSpacing: {
+                        ultrawide: '0.25em',
+                        mega: '0.4em',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #1A1A1A; }
+        ::-webkit-scrollbar-thumb { background: #8A8279; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #F5F0EB; }
+
+        .hero-overlay {
+            background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.25) 35%, rgba(0,0,0,0.15) 100%);
+        }
+        .hero-side-overlay {
+            background: linear-gradient(to right, rgba(0,0,0,0.55) 0%, transparent 55%);
+        }
+
+        .section-reveal {
+            opacity: 0;
+            transform: translateY(60px);
+            transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .section-reveal.visible { opacity: 1; transform: translateY(0); }
+
+        .img-reveal {
+            clip-path: inset(100% 0 0 0);
+            transition: clip-path 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .img-reveal.visible { clip-path: inset(0 0 0 0); }
+
+        .text-reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .text-reveal.visible { opacity: 1; transform: translateY(0); }
+
+        .line-expand {
+            width: 0;
+            transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .line-expand.visible { width: 80px; }
+
+        .btn-luxury {
+            position: relative; overflow: hidden; z-index: 1;
+        }
+        .btn-luxury::before {
+            content: ''; position: absolute; top: 0; left: -100%;
+            width: 100%; height: 100%; background: #F5F0EB;
+            transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1); z-index: -1;
+        }
+        .btn-luxury:hover::before { left: 0; }
+        .btn-luxury:hover { color: #1A1A1A !important; }
+
+        .btn-luxury-dark {
+            position: relative; overflow: hidden; z-index: 1;
+        }
+        .btn-luxury-dark::before {
+            content: ''; position: absolute; top: 0; left: -100%;
+            width: 100%; height: 100%; background: #1A1A1A;
+            transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1); z-index: -1;
+        }
+        .btn-luxury-dark:hover::before { left: 0; }
+        .btn-luxury-dark:hover { color: #F5F0EB !important; }
+
+        .collection-card:hover .collection-img { transform: scale(1.05); }
+        .collection-card:hover .collection-label { letter-spacing: 0.3em; }
+
+        .marquee { display: flex; animation: marquee 30s linear infinite; }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .nav-link { position: relative; }
+        .nav-link::after {
+            content: ''; position: absolute; bottom: -2px; left: 0;
+            width: 0; height: 1px; background: currentColor;
+            transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .nav-link:hover::after { width: 100%; }
+
+        .mobile-menu {
+            clip-path: inset(0 0 100% 0);
+            transition: clip-path 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .mobile-menu.open { clip-path: inset(0 0 0 0); }
+
+        .whatsapp-pulse { animation: pulse-ring 2s ease-out infinite; }
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); }
+            70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+
+        .grain {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 9999; opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+
+        .fade-in-delay-1 { transition-delay: 0.15s; }
+        .fade-in-delay-2 { transition-delay: 0.3s; }
+        .fade-in-delay-3 { transition-delay: 0.45s; }
+
+        .cinematic-dark-bg {
+            background: linear-gradient(135deg, #0d0d0d 0%, #1A1A1A 40%, #0f0f0f 100%);
+        }
+    </style>
+</head>
+<body class="bg-charcoal font-sans text-white antialiased overflow-x-hidden">
+
+    <div class="grain"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-500">
+        <div class="flex items-center justify-between px-6 md:px-12 py-5 md:py-6">
+            <a href="#home" class="relative z-50">
+                <span class="text-sm md:text-base font-medium tracking-ultrawide uppercase text-white">prime-picks.co</span>
+            </a>
+            <div class="hidden md:flex items-center gap-10">
+                <a href="#home" class="nav-link text-xs tracking-mega uppercase text-white/80 hover:text-white transition-colors duration-300">Home</a>
+                <a href="#collection" class="nav-link text-xs tracking-mega uppercase text-white/80 hover:text-white transition-colors duration-300">Collection</a>
+                <a href="#about" class="nav-link text-xs tracking-mega uppercase text-white/80 hover:text-white transition-colors duration-300">About</a>
+                <a href="#contact" class="nav-link text-xs tracking-mega uppercase text-white/80 hover:text-white transition-colors duration-300">Contact</a>
+            </div>
+            <div class="flex items-center gap-5">
+                <a href="https://tiktok.com/@primepicks.com0" target="_blank" class="hidden md:flex items-center gap-2 text-white/70 hover:text-white transition-colors duration-300">
+                    <span class="iconify" data-icon="simple-icons:tiktok" data-width="16"></span>
+                    <span class="text-xs tracking-widest uppercase">@primepicks.com0</span>
+                </a>
+                <button id="menuToggle" class="relative z-50 md:hidden w-8 h-8 flex flex-col items-end justify-center gap-1.5">
+                    <span id="menuLine1" class="block w-8 h-px bg-white transition-all duration-300 origin-center"></span>
+                    <span id="menuLine2" class="block w-6 h-px bg-white transition-all duration-300"></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="mobile-menu fixed inset-0 z-40 bg-charcoal flex flex-col items-center justify-center gap-8">
+        <a href="#home" class="mobile-nav-link text-3xl font-serif tracking-wide text-white/90 hover:text-cream transition-colors">Home</a>
+        <a href="#collection" class="mobile-nav-link text-3xl font-serif tracking-wide text-white/90 hover:text-cream transition-colors">Collection</a>
+        <a href="#about" class="mobile-nav-link text-3xl font-serif tracking-wide text-white/90 hover:text-cream transition-colors">About</a>
+        <a href="#contact" class="mobile-nav-link text-3xl font-serif tracking-wide text-white/90 hover:text-cream transition-colors">Contact</a>
+        <div class="mt-8 flex items-center gap-3 text-white/60">
+            <span class="iconify" data-icon="simple-icons:tiktok" data-width="18"></span>
+            <span class="text-sm tracking-widest">@primepicks.com0</span>
+        </div>
+    </div>
+
+    <!-- ========== HERO — Car Photo ========== -->
+    <section id="home" class="relative h-screen w-full overflow-hidden">
+        <div class="absolute inset-0">
+            <img src="https://z-cdn-media.chatglm.cn/files/3b40d139-d358-4510-bc8e-b46418ee09b8.png?auth_key=1877903913-5b1e8ab029384b4cae192ec91f3e1269-0-b6a88ef79d2f218a42a7f5e9e11c80c2" alt="prime-picks.co Hero" class="parallax-img w-full h-full object-cover object-center scale-105">
+        </div>
+        <div class="hero-overlay absolute inset-0"></div>
+        <div class="hero-side-overlay absolute inset-0"></div>
+        <div class="relative z-10 h-full flex flex-col justify-end px-6 md:px-12 pb-16 md:pb-24">
+            <div class="max-w-3xl">
+                <p class="text-reveal text-xs tracking-mega uppercase text-white/50 mb-4 md:mb-6">Designer Clothing — Curated Selection</p>
+                <h1 class="text-reveal fade-in-delay-1 text-4xl md:text-6xl lg:text-7xl font-serif font-normal leading-[1.1] tracking-tight text-white mb-6 md:mb-8">
+                    Redefine<br>Your <em class="font-serif italic text-cream">Style</em>
+                </h1>
+                <div class="line-expand bg-white/40 h-px mb-6 md:mb-8"></div>
+                <div class="text-reveal fade-in-delay-2 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                    <a href="#collection" class="btn-luxury inline-flex items-center gap-3 border border-white/40 text-white text-xs tracking-ultrawide uppercase px-8 py-4 hover:border-white transition-colors duration-300">
+                        Shop Now
+                        <span class="iconify" data-icon="lucide:arrow-right" data-width="14"></span>
+                    </a>
+                    <a href="#about" class="text-xs tracking-ultrawide uppercase text-white/50 hover:text-white transition-colors duration-300 px-2 py-4">
+                        Explore Collection
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 opacity-50">
+            <span class="text-[10px] tracking-mega uppercase text-white/60">Scroll</span>
+            <div class="w-px h-8 bg-gradient-to-b from-white/40 to-transparent animate-pulse"></div>
+        </div>
+    </section>
+
+    <!-- ========== MARQUEE ========== -->
+    <section class="bg-cream py-4 overflow-hidden border-y border-sand/50">
+        <div class="marquee whitespace-nowrap">
+            <span class="inline-block text-[11px] tracking-mega uppercase text-charcoal/40 mx-8">Designer Wear</span>
+            <span class="inline-block text-charcoal/20 mx-2">✦</span>
+            <span class="inline-block text-[11px] tracking-mega uppercase text-charcoal/40 mx-8">Premium Quality</span>
+            <span class="inline-block text-charcoal/20 mx-2">✦</span>
+            <span class="inline-block text-[11px] tracking-mega uppercase text-charcoal/40 mx-8">Curated Selection</span>
+            <span class="inline-block text-charcoal/20 mx-2">✦</span>
+            <span class="inline-block text-[11px] tracking-mega uppercase text-charcoal/40 mx-8">Exclusive Pieces</span>
+            <span class="inline-block text-charcoal/20 mx-2">✦</span>
+            <span class="inline-block text-[11px] tracking-mega uppercase text-charcoal/40 mx-8">Luxury Fashion</span>
+            <span class="inline-block text-charcoal/20 mx-2">✦</span>
+            <span class="inline-block text-[11px] tracking-mega uppercase text-charcoal/40 mx-8">Designer Wear</span>
+            <span class="inline-block text-charcoal/20 mx-2">✦</span>
+            <span class="inline-block text-[11px] tracking-mega uppercase text-charcoal/40 mx-8">Premium Quality</span>
+            <span class="inline-block text-charcoal/20 mx-2">✦</span>
+            <span class="inline-block text-[11px] tracking-mega uppercase text-charcoal/40 mx-8">Curated Selection</span>
+            <span class="inline-block text-charcoal/20 mx-2">✦</span>
+            <span class="inline-block text-[11px] tracking-mega uppercase text-charcoal/40 mx-8">Exclusive Pieces</span>
+            <span class="inline-block text-charcoal/20 mx-2">✦</span>
+            <span class="inline-block text-[11px] tracking-mega uppercase text-charcoal/40 mx-8">Luxury Fashion</span>
+            <span class="inline-block text-charcoal/20 mx-2">✦</span>
+        </div>
+    </section>
+
+    <!-- ========== COLLECTION ========== -->
+    <section id="collection" class="bg-ivory py-20 md:py-32">
+        <div class="px-6 md:px-12 mb-16 md:mb-24">
+            <div class="section-reveal max-w-xl">
+                <p class="text-xs tracking-mega uppercase text-warmgray mb-4">The Collection</p>
+                <h2 class="text-3xl md:text-5xl lg:text-6xl font-serif font-normal tracking-tight text-charcoal leading-[1.1]">
+                    Carefully Curated<br><em class="italic text-warmgray">for You</em>
+                </h2>
+            </div>
+        </div>
+
+        <div class="px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            <!-- Card 1 — Cyberpunk Alley (Outerwear) -->
+            <div class="collection-card group relative overflow-hidden cursor-pointer md:row-span-2 aspect-[3/4] md:aspect-auto">
+                <img src="https://z-cdn-media.chatglm.cn/files/92f55cf7-e2aa-4c49-a628-2331bcfbceed.png?auth_key=1877903913-aa97450b9bbc47eba8414eb735d3cd87-0-eed33b2cab52f64511834261612044d8" alt="Outerwear Collection" class="collection-img w-full h-full object-cover transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 p-6 md:p-10">
+                    <p class="text-[10px] tracking-mega uppercase text-white/50 mb-2">001</p>
+                    <h3 class="collection-label text-lg md:text-xl font-serif tracking-wide text-white transition-all duration-500">Outerwear</h3>
+                    <div class="w-0 group-hover:w-12 h-px bg-white/60 transition-all duration-500 mt-3"></div>
+                </div>
+            </div>
+
+            <!-- Card 2 — Rooftop Sunset (Essentials) -->
+            <div class="collection-card group relative overflow-hidden cursor-pointer aspect-[4/3]">
+                <img src="https://z-cdn-media.chatglm.cn/files/198017f1-2504-43ee-af55-c5d326d64a32.png?auth_key=1877903913-404423f5fe1a4af7b45fb2d25f693286-0-b0d3500c288543f2923d68325fc1175c" alt="Essentials Collection" class="collection-img w-full h-full object-cover transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                <div class="absolute bottom-0 left-0 p-6 md:p-10">
+                    <p class="text-[10px] tracking-mega uppercase text-white/50 mb-2">002</p>
+                    <h3 class="collection-label text-lg md:text-xl font-serif tracking-wide text-white transition-all duration-500">Essentials</h3>
+                    <div class="w-0 group-hover:w-12 h-px bg-white/60 transition-all duration-500 mt-3"></div>
+                </div>
+            </div>
+
+            <!-- Card 3 — Beige Backdrop (Accessories) -->
+            <div class="collection-card group relative overflow-hidden cursor-pointer aspect-[4/3]">
+                <img src="https://z-cdn-media.chatglm.cn/files/1bd034a2-e473-4e9b-a371-3065ef4402f5.png?auth_key=1877903913-20bf7859a13049c19cd3b66aa4751ea2-0-e5645985b197e43d56d14359e54c8ad9" alt="Accessories Collection" class="collection-img w-full h-full object-cover transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+                <div class="absolute bottom-0 left-0 p-6 md:p-10">
+                    <p class="text-[10px] tracking-mega uppercase text-white/50 mb-2">003</p>
+                    <h3 class="collection-label text-lg md:text-xl font-serif tracking-wide text-white transition-all duration-500">Accessories</h3>
+                    <div class="w-0 group-hover:w-12 h-px bg-white/60 transition-all duration-500 mt-3"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-reveal px-6 md:px-12 mt-12 md:mt-16 flex justify-center">
+            <a href="#contact" class="btn-luxury-dark inline-flex items-center gap-3 border border-charcoal/30 text-charcoal text-xs tracking-ultrawide uppercase px-10 py-4 hover:border-charcoal transition-colors duration-300">
+                Explore Collection
+                <span class="iconify" data-icon="lucide:arrow-right" data-width="14"></span>
+            </a>
+        </div>
+    </section>
+
+    <!-- ========== EDITORIAL SPLIT — Cyberpunk (reused) ========== -->
+    <section class="bg-charcoal">
+        <div class="grid grid-cols-1 md:grid-cols-2 min-h-screen">
+            <div class="relative overflow-hidden aspect-[3/4] md:aspect-auto">
+                <img src="https://z-cdn-media.chatglm.cn/files/92f55cf7-e2aa-4c49-a628-2331bcfbceed.png?auth_key=1877903913-aa97450b9bbc47eba8414eb735d3cd87-0-eed33b2cab52f64511834261612044d8" alt="Editorial" class="img-reveal w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/20"></div>
+            </div>
+            <div class="flex items-center px-6 md:px-16 lg:px-24 py-16 md:py-0">
+                <div class="section-reveal max-w-lg">
+                    <p class="text-xs tracking-mega uppercase text-white/30 mb-6">Our Philosophy</p>
+                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-serif font-normal tracking-tight text-white leading-[1.15] mb-8">
+                        Fashion Is Not<br>About <em class="italic text-cream">Trends</em>
+                    </h2>
+                    <div class="line-expand bg-white/20 h-px mb-8"></div>
+                    <p class="text-sm md:text-base font-light leading-relaxed text-white/50 mb-10">
+                        At prime-picks.co, we believe in timeless design over fleeting trends. Every piece in our collection is handpicked for its craftsmanship, fabric quality, and ability to elevate your wardrobe for years to come.
+                    </p>
+                    <a href="https://tiktok.com/@primepicks.com0" target="_blank" class="inline-flex items-center gap-3 text-white/60 hover:text-white transition-colors duration-300 group">
+                        <span class="iconify" data-icon="simple-icons:tiktok" data-width="18"></span>
+                        <span class="text-xs tracking-widest uppercase">Follow @primepicks.com0</span>
+                        <span class="iconify opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" data-icon="lucide:arrow-right" data-width="12"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== ABOUT — Beige Backdrop (reused) ========== -->
+    <section id="about" class="bg-cream">
+        <div class="grid grid-cols-1 md:grid-cols-2 min-h-screen">
+            <div class="flex items-center px-6 md:px-16 lg:px-24 py-16 md:py-0 order-2 md:order-1">
+                <div class="section-reveal max-w-lg">
+                    <p class="text-xs tracking-mega uppercase text-warmgray mb-6">About Us</p>
+                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-serif font-normal tracking-tight text-charcoal leading-[1.15] mb-8">
+                        Built on <em class="italic text-warmgray">Passion</em><br>for Design
+                    </h2>
+                    <div class="line-expand bg-charcoal/20 h-px mb-8"></div>
+                    <p class="text-sm md:text-base font-light leading-relaxed text-charcoal/50 mb-6">
+                        prime-picks.co was born from a simple idea: make designer fashion accessible without compromising on authenticity. We source directly from trusted suppliers, ensuring every garment meets our rigorous standards.
+                    </p>
+                    <p class="text-sm md:text-base font-light leading-relaxed text-charcoal/50 mb-10">
+                        From the streets of London to your doorstep — we curate with intent, style with purpose, and deliver with care.
+                    </p>
+                    <div class="flex items-center gap-12">
+                        <div>
+                            <p class="text-2xl md:text-3xl font-serif text-charcoal">500+</p>
+                            <p class="text-[10px] tracking-mega uppercase text-warmgray mt-1">Pieces Sold</p>
+                        </div>
+                        <div>
+                            <p class="text-2xl md:text-3xl font-serif text-charcoal">100%</p>
+                            <p class="text-[10px] tracking-mega uppercase text-warmgray mt-1">Authentic</p>
+                        </div>
+                        <div>
+                            <p class="text-2xl md:text-3xl font-serif text-charcoal">24h</p>
+                            <p class="text-[10px] tracking-mega uppercase text-warmgray mt-1">Response</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="relative overflow-hidden aspect-[3/4] md:aspect-auto order-1 md:order-2">
+                <img src="https://z-cdn-media.chatglm.cn/files/1bd034a2-e473-4e9b-a371-3065ef4402f5.png?auth_key=1877903913-20bf7859a13049c19cd3b66aa4751ea2-0-e5645985b197e43d56d14359e54c8ad9" alt="About prime-picks.co" class="img-reveal w-full h-full object-cover">
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FULL WIDTH CINEMATIC — Rooftop Sunset (reused) ========== -->
+    <section class="relative h-screen overflow-hidden">
+        <img src="https://z-cdn-media.chatglm.cn/files/198017f1-2504-43ee-af55-c5d326d64a32.png?auth_key=1877903913-404423f5fe1a4af7b45fb2d25f693286-0-b0d3500c288543f2923d68325fc1175c" alt="Cinematic" class="parallax-img w-full h-full object-cover scale-110">
+        <div class="absolute inset-0 bg-black/35"></div>
+        <div class="absolute inset-0 flex items-center justify-center text-center px-6">
+            <div class="section-reveal">
+                <p class="text-xs tracking-mega uppercase text-white/40 mb-6">prime-picks.co</p>
+                <h2 class="text-4xl md:text-6xl lg:text-8xl font-serif font-normal tracking-tight text-white leading-[1.05]">
+                    Wear It<br><em class="italic text-cream/80">With Pride</em>
+                </h2>
+                <div class="flex justify-center mt-8">
+                    <div class="line-expand bg-white/30 h-px"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== TIKTOK FEATURE ========== -->
+    <section class="cinematic-dark-bg py-20 md:py-32">
+        <div class="section-reveal px-6 md:px-12 text-center max-w-3xl mx-auto">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full border border-white/10 mb-8">
+                <span class="iconify text-white/60" data-icon="simple-icons:tiktok" data-width="28"></span>
+            </div>
+            <h2 class="text-3xl md:text-5xl font-serif font-normal tracking-tight text-white leading-[1.15] mb-6">
+                Follow the <em class="italic text-cream">Movement</em>
+            </h2>
+            <p class="text-sm font-light leading-relaxed text-white/40 mb-10 max-w-md mx-auto">
+                Join our growing community on TikTok. See the latest drops, styling tips, and behind-the-scenes content.
+            </p>
+            <a href="https://tiktok.com/@primepicks.com0" target="_blank" class="btn-luxury inline-flex items-center gap-3 border border-white/30 text-white text-xs tracking-ultrawide uppercase px-10 py-4 hover:border-white transition-colors duration-300">
+                @primepicks.com0
+                <span class="iconify" data-icon="lucide:external-link" data-width="13"></span>
+            </a>
+        </div>
+    </section>
+
+    <!-- ========== CONTACT ========== -->
+    <section id="contact" class="bg-ivory py-20 md:py-32">
+        <div class="px-6 md:px-12 max-w-2xl mx-auto text-center">
+            <div class="section-reveal">
+                <p class="text-xs tracking-mega uppercase text-warmgray mb-6">Get In Touch</p>
+                <h2 class="text-3xl md:text-4xl lg:text-5xl font-serif font-normal tracking-tight text-charcoal leading-[1.15] mb-8">
+                    Let's <em class="italic text-warmgray">Connect</em>
+                </h2>
+                <div class="line-expand bg-charcoal/15 h-px mb-8 mx-auto"></div>
+                <p class="text-sm font-light leading-relaxed text-charcoal/45 mb-14 max-w-sm mx-auto">
+                    Have a question about a piece, need styling advice, or want to place a custom order? Reach out directly.
+                </p>
+            </div>
+
+            <div class="section-reveal fade-in-delay-1 flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-16">
+                <a href="https://wa.me/447859693771" target="_blank" class="flex items-center gap-4 group">
+                    <div class="w-12 h-12 rounded-full bg-green-500/10 flex items-center justify-center group-hover:bg-green-500/20 transition-colors duration-300">
+                        <span class="iconify text-green-500" data-icon="simple-icons:whatsapp" data-width="22"></span>
+                    </div>
+                    <div class="text-left">
+                        <p class="text-[10px] tracking-mega uppercase text-warmgray mb-0.5">WhatsApp</p>
+                        <p class="text-sm text-charcoal/70 group-hover:text-charcoal transition-colors">+44 7859 693771</p>
+                    </div>
+                </a>
+
+                <a href="https://tiktok.com/@primepicks.com0" target="_blank" class="flex items-center gap-4 group">
+                    <div class="w-12 h-12 rounded-full bg-charcoal/5 flex items-center justify-center group-hover:bg-charcoal/10 transition-colors duration-300">
+                        <span class="iconify text-charcoal/60" data-icon="simple-icons:tiktok" data-width="22"></span>
+                    </div>
+                    <div class="text-left">
+                        <p class="text-[10px] tracking-mega uppercase text-warmgray mb-0.5">TikTok</p>
+                        <p class="text-sm text-charcoal/70 group-hover:text-charcoal transition-colors">@primepicks.com0</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="bg-charcoal border-t border-white/5">
+        <div class="px-6 md:px-12 py-16 md:py-24">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8">
+                <div class="md:col-span-2">
+                    <p class="text-sm md:text-base font-medium tracking-ultrawide uppercase text-white mb-4">prime-picks.co</p>
+                    <p class="text-sm font-light leading-relaxed text-white/30 max-w-sm mb-8">
+                        Curated designer clothing for those who value quality, authenticity, and timeless style.
+                    </p>
+                    <div class="flex items-center gap-5">
+                        <a href="https://tiktok.com/@primepicks.com0" target="_blank" class="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center hover:border-white/30 hover:bg-white/5 transition-all duration-300">
+                            <span class="iconify text-white/50" data-icon="simple-icons:tiktok" data-width="14"></span>
+                        </a>
+                        <a href="https://wa.me/447859693771" target="_blank" class="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center hover:border-white/30 hover:bg-white/5 transition-all duration-300">
+                            <span class="iconify text-white/50" data-icon="simple-icons:whatsapp" data-width="14"></span>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[10px] tracking-mega uppercase text-white/30 mb-6">Navigation</p>
+                    <ul class="space-y-3">
+                        <li><a href="#home" class="text-sm text-white/50 hover:text-white transition-colors duration-300">Home</a></li>
+                        <li><a href="#collection" class="text-sm text-white/50 hover:text-white transition-colors duration-300">Collection</a></li>
+                        <li><a href="#about" class="text-sm text-white/50 hover:text-white transition-colors duration-300">About</a></li>
+                        <li><a href="#contact" class="text-sm text-white/50 hover:text-white transition-colors duration-300">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <p class="text-[10px] tracking-mega uppercase text-white/30 mb-6">Contact</p>
+                    <ul class="space-y-3">
+                        <li><a href="https://wa.me/447859693771" class="text-sm text-white/50 hover:text-white transition-colors duration-300">+44 7859 693771</a></li>
+                        <li><a href="https://tiktok.com/@primepicks.com0" target="_blank" class="text-sm text-white/50 hover:text-white transition-colors duration-300">@primepicks.com0</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-white/5 px-6 md:px-12 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p class="text-[11px] text-white/20 tracking-wider">© 2025 prime-picks.co. All rights reserved.</p>
+            <p class="text-[11px] text-white/20 tracking-wider">Designed with intention</p>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/447859693771" target="_blank" class="whatsapp-pulse fixed bottom-6 right-6 z-50 w-14 h-14 bg-green-500 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 hover:scale-110 transition-all duration-300 group">
+        <span class="iconify text-white" data-icon="simple-icons:whatsapp" data-width="26"></span>
+        <span class="absolute right-full mr-3 bg-charcoal text-white text-xs px-3 py-1.5 rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+            Chat with us
+        </span>
+    </a>
+
+    <script>
+        // Mobile Menu
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuLine1 = document.getElementById('menuLine1');
+        const menuLine2 = document.getElementById('menuLine2');
+        let menuOpen = false;
+
+        menuToggle.addEventListener('click', () => {
+            menuOpen = !menuOpen;
+            mobileMenu.classList.toggle('open', menuOpen);
+            if (menuOpen) {
+                menuLine1.style.transform = 'rotate(45deg) translateY(4px)';
+                menuLine2.style.transform = 'rotate(-45deg) translateY(-3px)';
+                menuLine2.style.width = '32px';
+                document.body.style.overflow = 'hidden';
+            } else {
+                menuLine1.style.transform = '';
+                menuLine2.style.transform = '';
+                menuLine2.style.width = '';
+                document.body.style.overflow = '';
+            }
+        });
+
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                menuOpen = false;
+                mobileMenu.classList.remove('open');
+                menuLine1.style.transform = '';
+                menuLine2.style.transform = '';
+                menuLine2.style.width = '';
+                document.body.style.overflow = '';
+            });
+        });
+
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.style.background = 'rgba(26,26,26,0.88)';
+                navbar.style.backdropFilter = 'blur(20px)';
+                navbar.style.WebkitBackdropFilter = 'blur(20px)';
+            } else {
+                navbar.style.background = 'transparent';
+                navbar.style.backdropFilter = 'none';
+                navbar.style.WebkitBackdropFilter = 'none';
+            }
+        });
+
+        // Intersection Observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { root: null, rootMargin: '0px 0px -80px 0px', threshold: 0.12 });
+
+        document.querySelectorAll('.section-reveal, .img-reveal, .text-reveal, .line-expand').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Parallax
+        const parallaxImgs = document.querySelectorAll('.parallax-img');
+        window.addEventListener('scroll', () => {
+            parallaxImgs.forEach(img => {
+                const rect = img.parentElement.getBoundingClientRect();
+                if (rect.bottom > 0 && rect.top < window.innerHeight) {
+                    img.style.transform = `translateY(${rect.top * 0.3}px) scale(1.05)`;
+                }
+            });
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href === '#') return;
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+</body>
+</html>
